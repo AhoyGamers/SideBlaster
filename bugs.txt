@@ -1,0 +1,6 @@
+The rotation of blaster placement gets a bit wonky when you factor in the corners of a square in ShapeBuilder.
+
+Blaster placement can overlap. Don't want that! But when trying to get out of a blasterPlacement Area2D into a goodPlacementArea it still shows up as red! _on_Placement_area_exited in Blaster.gd is likely the culprit
+
+QoL features:
+	have the blaster stop following the mouse inside of the badArea. Could be done with signals from badArea

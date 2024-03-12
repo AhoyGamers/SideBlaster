@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/UIThemes/Menus.tres" type="Theme" id=1]
+[ext_resource path="res://Objects/SoundLine.gd" type="Script" id=2]
+[ext_resource path="res://assets/death.mp3" type="AudioStream" id=3]
+[ext_resource path="res://Objects/SliderFocusShifter.gd" type="Script" id=4]
+
+[node name="VolumeSlider" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="HSlider" type="HSlider" parent="."]
+margin_left = -161.0
+margin_top = -32.0
+margin_right = 168.0
+margin_bottom = 32.0
+theme = ExtResource( 1 )
+min_value = 1.0
+max_value = 90.0
+step = 10.0
+value = 90.0
+script = ExtResource( 4 )
+
+[node name="SFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "SFX"
+
+[connection signal="shift_focus_down" from="HSlider" to="." method="_on_HSlider_shift_focus_down"]
+[connection signal="shift_focus_up" from="HSlider" to="." method="_on_HSlider_shift_focus_up"]
+[connection signal="value_changed" from="HSlider" to="." method="_on_HSlider_value_changed"]

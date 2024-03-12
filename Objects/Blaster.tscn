@@ -1,0 +1,54 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://assets/blaster.png" type="Texture" id=1]
+[ext_resource path="res://Objects/Blaster.gd" type="Script" id=2]
+[ext_resource path="res://assets/redBlaster.png" type="Texture" id=3]
+[ext_resource path="res://assets/greenBlaster.png" type="Texture" id=4]
+[ext_resource path="res://assets/blast.mp3" type="AudioStream" id=5]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 1 ) ],
+"loop": true,
+"name": "default",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 4 ) ],
+"loop": true,
+"name": "Valid",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 3 ) ],
+"loop": true,
+"name": "Invalid",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 18.0
+
+[node name="Blaster" type="Node2D" groups=["Blaster"]]
+rotation = 1.5708
+script = ExtResource( 2 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 1 )
+animation = "Invalid"
+
+[node name="Placement" type="Area2D" parent="." groups=["BlasterPlacement"]]
+position = Vector2( 13, -12 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Placement"]
+position = Vector2( -0.999998, 13 )
+shape = SubResource( 2 )
+
+[node name="ProjectileSpawn" type="Position2D" parent="."]
+position = Vector2( -29, 0 )
+rotation = -3.14159
+
+[node name="SFX" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 5 )
+
+[connection signal="area_entered" from="Placement" to="." method="_on_Placement_area_entered"]
+[connection signal="area_exited" from="Placement" to="." method="_on_Placement_area_exited"]
+[connection signal="input_event" from="Placement" to="." method="_on_Placement_input_event"]

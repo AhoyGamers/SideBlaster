@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/Chiptronical.mp3-dcc7990fd887a21381e9acfafd7e5e0c.mp3str"
+
+[deps]
+
+source_file="res://assets/Chiptronical.mp3"
+dest_files=[ "res://.import/Chiptronical.mp3-dcc7990fd887a21381e9acfafd7e5e0c.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

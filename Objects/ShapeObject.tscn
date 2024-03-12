@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Objects/SquareObject.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Objects/TriangleObject.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/KiteObject.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Objects/ShapeObject.gd" type="Script" id=4]
+
+[node name="ShapeObject" type="Node2D"]
+script = ExtResource( 4 )
+
+[node name="TriangleObject" parent="." instance=ExtResource( 2 )]
+
+[node name="SquareObject" parent="." instance=ExtResource( 1 )]
+modulate = Color( 1.2, 1.2, 1.2, 1 )
+
+[node name="KiteObject" parent="." instance=ExtResource( 3 )]
+
+[connection signal="crash" from="TriangleObject" to="." method="_on_TriangleObject_crash"]
+[connection signal="crash" from="SquareObject" to="." method="_on_SquareObject_crash"]
+[connection signal="crash" from="KiteObject" to="." method="_on_KiteObject_crash"]

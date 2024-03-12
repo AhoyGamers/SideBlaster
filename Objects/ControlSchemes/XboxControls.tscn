@@ -1,0 +1,155 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://fonts/Fibberish/Fibberish.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Objects/ControlSchemes/ControlAnimPlayer.gd" type="Script" id=2]
+[ext_resource path="res://assets/controls/AButton.png" type="Texture" id=3]
+[ext_resource path="res://assets/controls/RightJoystick.png" type="Texture" id=4]
+[ext_resource path="res://assets/controls/LeftJoystick.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=12]
+atlas = ExtResource( 5 )
+region = Rect2( 18, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=13]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=14]
+atlas = ExtResource( 5 )
+region = Rect2( 36, 18, 18, 18 )
+
+[sub_resource type="SpriteFrames" id=11]
+animations = [ {
+"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 12 ), SubResource( 14 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[sub_resource type="AtlasTexture" id=15]
+atlas = ExtResource( 4 )
+region = Rect2( 18, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=16]
+atlas = ExtResource( 4 )
+region = Rect2( 0, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=17]
+atlas = ExtResource( 4 )
+region = Rect2( 18, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=18]
+atlas = ExtResource( 4 )
+region = Rect2( 36, 18, 18, 18 )
+
+[sub_resource type="SpriteFrames" id=19]
+animations = [ {
+"frames": [ SubResource( 15 ), SubResource( 16 ), SubResource( 17 ), SubResource( 18 ) ],
+"loop": true,
+"name": "default",
+"speed": 2.0
+} ]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "FadeInUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "FadeOutUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+
+[node name="JoystickControls" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="LeftJoystick" type="AnimatedSprite" parent="."]
+position = Vector2( -358, -2 )
+scale = Vector2( 11.3922, 11.3922 )
+frames = SubResource( 11 )
+frame = 3
+playing = true
+
+[node name="RightJoystick" type="AnimatedSprite" parent="."]
+position = Vector2( 355, 5 )
+scale = Vector2( 11.392, 11.392 )
+frames = SubResource( 19 )
+playing = true
+
+[node name="AButton" type="Sprite" parent="."]
+position = Vector2( 356, 251.731 )
+scale = Vector2( 5.2473, 5.2473 )
+texture = ExtResource( 3 )
+
+[node name="Instruct_Left" type="RichTextLabel" parent="."]
+margin_left = -455.0
+margin_top = 142.0
+margin_right = -196.0
+margin_bottom = 238.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Left Joystick
+   Move
+   Select Upgrade"
+text = "Left Joystick
+   Move
+   Select Upgrade"
+scroll_active = false
+
+[node name="Instruct_Right" type="RichTextLabel" parent="."]
+margin_left = 270.0
+margin_top = 133.0
+margin_right = 465.0
+margin_bottom = 207.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Right Joystick
+   Shoot"
+text = "Right Joystick
+   Shoot"
+scroll_active = false
+
+[node name="Confirm" type="RichTextLabel" parent="."]
+margin_left = 309.0
+margin_top = 297.731
+margin_right = 416.0
+margin_bottom = 330.731
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Confirm"
+text = "Confirm"
+scroll_active = false
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FadeInUI = SubResource( 3 )
+anims/FadeOutUI = SubResource( 4 )
+anims/RESET = SubResource( 5 )

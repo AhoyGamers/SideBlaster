@@ -1,0 +1,490 @@
+[gd_scene load_steps=32 format=2]
+
+[ext_resource path="res://Screens/ShapeBuilder.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Screens/ArenaCamera.gd" type="Script" id=2]
+[ext_resource path="res://Screens/Arena.gd" type="Script" id=3]
+[ext_resource path="res://Screens/Player.gd" type="Script" id=4]
+[ext_resource path="res://assets/death.mp3" type="AudioStream" id=5]
+[ext_resource path="res://assets/lose.mp3" type="AudioStream" id=6]
+[ext_resource path="res://assets/filled_kite.png" type="Texture" id=7]
+[ext_resource path="res://Screens/ExpBar.gd" type="Script" id=8]
+[ext_resource path="res://assets/SquareGrid.png" type="Texture" id=9]
+[ext_resource path="res://Screens/Grid.gd" type="Script" id=10]
+[ext_resource path="res://Screens/Pause.tscn" type="PackedScene" id=11]
+
+[sub_resource type="Environment" id=13]
+background_mode = 4
+glow_enabled = true
+glow_levels/1 = true
+glow_levels/2 = true
+glow_levels/4 = true
+glow_levels/5 = false
+glow_blend_mode = 0
+glow_hdr_threshold = 0.0
+glow_bicubic_upscale = true
+
+[sub_resource type="RectangleShape2D" id=12]
+extents = Vector2( 39, 38.5 )
+
+[sub_resource type="Animation" id=16]
+resource_name = "GlowFadeIn"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("ObjectGlow:environment:glow_strength")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.8 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ParallaxBackground/ParallaxLayer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.501961, 0.501961, 0.501961, 0 ), Color( 0.5, 0.5, 0.5, 0.7 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ParallaxBackground2/ParallaxLayer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.4, 0.8 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.501961, 0.501961, 0.501961, 0 ), Color( 0.501961, 0.501961, 0.501961, 0.231373 ) ]
+}
+
+[sub_resource type="Animation" id=17]
+resource_name = "GlowOut"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("ObjectGlow:environment:glow_strength")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3.5 ),
+"transitions": PoolRealArray( 2, 2 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ParallaxBackground/ParallaxLayer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.5, 0.5, 0.5, 0.7 ), Color( 0.5, 0.5, 0.5, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ParallaxBackground2/ParallaxLayer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.2, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 0.5, 0.5, 0.5, 0.25 ), Color( 0.5, 0.5, 0.5, 0 ) ]
+}
+
+[sub_resource type="Animation" id=22]
+resource_name = "PlayerHit"
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("Player:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.5, 0.7, 1, 1.2, 1.5, 1.8, 2 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=15]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ObjectGlow:environment:glow_strength")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ParallaxBackground/ParallaxLayer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.5, 0.5, 0.5, 0.7 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("ParallaxBackground2/ParallaxLayer:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.5, 0.5, 0.5, 0.25 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Player:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=18]
+resource_name = "ShiftGridColor"
+length = 37.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 7.5, 15, 22.5, 29, 37 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0.5, 0.5, 0.5, 0.7 ), Color( 0.403922, 0.470588, 0.0313726, 0.701961 ), Color( 0.145098, 0.419608, 0.160784, 0.701961 ), Color( 0.101961, 0.427451, 0.47451, 0.701961 ), Color( 0.00396729, 0.0594365, 0.507813, 0.701961 ), Color( 0.631373, 0.627451, 0.666667, 0.701961 ) ]
+}
+
+[sub_resource type="Shader" id=10]
+resource_local_to_scene = true
+code = "/*
+	動的電子背景シェーダー by あるる（きのもと 結衣） @arlez80
+	Procedural Electric Background Shader by Yui Kinomoto @arlez80
+
+	MIT License
+*/
+shader_type canvas_item;
+
+uniform vec4 background_color : hint_color = vec4( 0.0, 0.0, 0.0, 1.0 );
+uniform vec4 line_color : hint_color = vec4( 0.0, 1.0, 1.0, 1.0 );
+uniform float line_freq = 9.56;
+uniform float height = 0.6;
+uniform float speed = 0.8;
+uniform vec2 scale = vec2( 2.0, 16.0 );
+
+void fragment( )
+{
+	vec2 uv = UV * scale;
+	float shift = cos( floor( uv.y ) );
+	uv.x += shift;
+
+	float freq = clamp( cos( uv.x * line_freq ) * 3.0, 0.0, 1.0 ) * height;
+	float line = 1.0 - clamp( abs( freq - mod( uv.y, 1.0 ) ) * 11.0, 0.0, 1.0 );
+
+	COLOR = mix( background_color, line_color, line * mod( uv.x - TIME * speed * abs( shift ), 1.0 ) /*  * mod( TIME + shift, 1.0 ) */ );
+}"
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 10 )
+shader_param/background_color = Color( 0, 0, 0, 1 )
+shader_param/line_color = Color( 0, 1, 1, 1 )
+shader_param/line_freq = 9.56
+shader_param/height = 0.6
+shader_param/speed = 0.8
+shader_param/scale = Vector2( 2, 16 )
+
+[sub_resource type="Animation" id=19]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.701961 ) ]
+}
+
+[sub_resource type="Animation" id=20]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.701961 ) ]
+}
+
+[sub_resource type="Animation" id=21]
+resource_name = "ShiftGridColor"
+length = 37.0
+loop = true
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 768, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 10, 39.0381 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 15.4244, 13.3888 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 104.61, 10 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 481.5, 10 )
+
+[sub_resource type="RectangleShape2D" id=6]
+extents = Vector2( 15.75, 343.5 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 10, 339 )
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 480, 14 )
+
+[node name="Arena" type="Node2D"]
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_horizontal_guides_": [ 740.0 ],
+"_edit_vertical_guides_": [ 1119.0 ]
+}
+enemies_per_round = 3
+max_obstacle_spawn_time = 3
+min_obstacle_spawn_time = 1
+max_obstacles_per_round = 2
+max_enemy_spawn_time = 5
+
+[node name="PauseMenu" parent="." instance=ExtResource( 11 )]
+pause_mode = 2
+visible = false
+position = Vector2( -467, -355 )
+z_index = 3
+
+[node name="ObjectGlow" type="WorldEnvironment" parent="."]
+environment = SubResource( 13 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Player" type="KinematicBody2D" parent="." groups=["Player"]]
+position = Vector2( 5, -209 )
+collision_layer = 6
+collision_mask = 6
+script = ExtResource( 4 )
+speed = 400
+
+[node name="PlayerBoundryCollider" type="CollisionShape2D" parent="Player"]
+position = Vector2( 1, -15 )
+shape = SubResource( 12 )
+
+[node name="ShapeBuilder" parent="Player" groups=["player"] instance=ExtResource( 1 )]
+show_behind_parent = true
+material = null
+scale = Vector2( 0.311284, 0.307191 )
+z_index = 1
+
+[node name="ExpBar" type="TextureProgress" parent="Player"]
+anchor_right = 0.633
+margin_left = -31.0
+margin_top = -44.0
+margin_right = 35.0
+margin_bottom = 18.0
+mouse_filter = 2
+texture_progress = ExtResource( 7 )
+fill_mode = 3
+nine_patch_stretch = true
+script = ExtResource( 8 )
+
+[node name="Camera" type="Camera2D" parent="." groups=["Camera"]]
+current = true
+script = ExtResource( 2 )
+transition_time = 1.0
+
+[node name="Tween" type="Tween" parent="Camera"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/GlowFadeIn = SubResource( 16 )
+anims/GlowOut = SubResource( 17 )
+anims/PlayerHit = SubResource( 22 )
+anims/RESET = SubResource( 15 )
+anims/ShiftGridColor = SubResource( 18 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+script = ExtResource( 10 )
+
+[node name="ColorRect" type="ColorRect" parent="ParallaxBackground"]
+modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+material = SubResource( 11 )
+margin_left = -2557.0
+margin_top = -1618.0
+margin_right = 2225.0
+margin_bottom = 1125.0
+mouse_filter = 2
+
+[node name="ColorPlayer" type="AnimationPlayer" parent="ParallaxBackground"]
+root_node = NodePath("../ParallaxLayer")
+anims/RESET = SubResource( 19 )
+anims/ShiftGridColor = SubResource( 18 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+modulate = Color( 1, 1, 1, 0.701961 )
+position = Vector2( -639, -432 )
+motion_mirroring = Vector2( 1008, 667 )
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground/ParallaxLayer"]
+margin_right = 1010.0
+margin_bottom = 669.0
+mouse_filter = 2
+texture = ExtResource( 9 )
+stretch_mode = 2
+
+[node name="ParallaxBackground2" type="ParallaxBackground" parent="."]
+scroll_ignore_camera_zoom = true
+script = ExtResource( 10 )
+
+[node name="ColorPlayer" type="AnimationPlayer" parent="ParallaxBackground2"]
+root_node = NodePath("../../ParallaxBackground/ParallaxLayer")
+anims/RESET = SubResource( 20 )
+anims/ShiftGridColor = SubResource( 21 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground2"]
+modulate = Color( 0.5, 0.5, 0.5, 0.25 )
+position = Vector2( -615, -432 )
+motion_mirroring = Vector2( 1008, 667 )
+
+[node name="TextureRect" type="TextureRect" parent="ParallaxBackground2/ParallaxLayer"]
+margin_right = 1010.0
+margin_bottom = 669.0
+mouse_filter = 2
+texture = ExtResource( 9 )
+stretch_mode = 2
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+
+[node name="ObstacleSpawnTimer" type="Timer" parent="."]
+
+[node name="DeathPlane2" type="Area2D" parent="." groups=["DeathPlane"]]
+position = Vector2( -3560, -1460 )
+scale = Vector2( 4, 1.547 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane2" groups=["DeathPlane"]]
+position = Vector2( 1010.25, 380.091 )
+shape = SubResource( 1 )
+
+[node name="DeathPlane" type="Area2D" parent="." groups=["DeathPlane"]]
+position = Vector2( -1902, -336 )
+scale = Vector2( 1, 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane" groups=["DeathPlane"]]
+position = Vector2( 741, 59.6667 )
+scale = Vector2( 1.93602, 12.4713 )
+shape = SubResource( 2 )
+
+[node name="DeathPlane3" type="Area2D" parent="." groups=["DeathPlane"]]
+position = Vector2( 2225, 1042 )
+scale = Vector2( 1.426, 200 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane3"]
+position = Vector2( -713.184, -3.215 )
+shape = SubResource( 3 )
+
+[node name="DeathPlane4" type="Area2D" parent="." groups=["DeathPlane"]]
+position = Vector2( -2370, 1207 )
+scale = Vector2( 3, 1.947 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathPlane4"]
+position = Vector2( 721.333, -239.856 )
+scale = Vector2( 7.68497, 1.91514 )
+shape = SubResource( 4 )
+
+[node name="PlayerBoundry" type="KinematicBody2D" parent="." groups=["Boundry"]]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBoundry"]
+position = Vector2( -4, -336 )
+shape = SubResource( 5 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="PlayerBoundry"]
+position = Vector2( -496, 10 )
+shape = SubResource( 6 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="PlayerBoundry"]
+position = Vector2( 481, 16 )
+shape = SubResource( 7 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="PlayerBoundry"]
+position = Vector2( -3, 336 )
+shape = SubResource( 8 )
+
+[node name="Death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+bus = "SFX"
+
+[node name="Lose" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+bus = "SFX"
+
+[connection signal="EnemyDestroyed" from="." to="Player/ExpBar" method="_on_Arena_EnemyDestroyed"]
+[connection signal="all_enemies_defeated" from="." to="Player/ExpBar" method="_on_Arena_all_enemies_defeated"]
+[connection signal="all_enemies_defeated" from="." to="ParallaxBackground" method="_on_Arena_all_enemies_defeated"]
+[connection signal="all_enemies_defeated" from="." to="ParallaxBackground2" method="_on_Arena_all_enemies_defeated"]
+[connection signal="max_HP_reached" from="." to="Player/ShapeBuilder" method="_on_Arena_max_HP_reached"]
+[connection signal="new_round_started" from="." to="Player/ExpBar" method="_on_Arena_new_round_started"]
+[connection signal="new_round_started" from="." to="ParallaxBackground" method="_on_Arena_new_round_started"]
+[connection signal="new_round_started" from="." to="ParallaxBackground2" method="_on_Arena_new_round_started"]
+[connection signal="player_healed" from="." to="Camera" method="_on_Arena_player_healed"]
+[connection signal="player_hit" from="." to="Player" method="_on_Arena_player_hit"]
+[connection signal="player_hit" from="." to="Player/ShapeBuilder" method="_on_Arena_player_hit"]
+[connection signal="player_hit" from="." to="Camera" method="_on_Arena_player_hit"]
+[connection signal="increase_HP" from="Player/ShapeBuilder" to="." method="_on_ShapeBuilder_increase_HP"]
+[connection signal="player_finished_building" from="Player/ShapeBuilder" to="." method="_on_Player_player_finished_building"]
+[connection signal="finish_zoom" from="Camera" to="." method="_on_Camera_finish_zoom"]
+[connection signal="tween_completed" from="Camera/Tween" to="Camera" method="_on_Tween_tween_completed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="animation_finished" from="AnimationPlayer" to="ParallaxBackground" method="_on_AnimationPlayer_animation_finished"]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_EnemySpawnTimer_timeout"]
+[connection signal="timeout" from="ObstacleSpawnTimer" to="." method="_on_ObstacleSpawnTimer_timeout"]

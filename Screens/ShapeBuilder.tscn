@@ -1,0 +1,378 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://fonts/Fibberish/Fibberish.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Objects/ShapeObject.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/UIBox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Screens/ShapeBuilder.gd" type="Script" id=4]
+[ext_resource path="res://Screens/blast_timer.gd" type="Script" id=5]
+[ext_resource path="res://Objects/TimeButton.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Objects/TimeButton.gd" type="Script" id=7]
+[ext_resource path="res://Objects/HPButton.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Objects/ControlSchemes/TriangleControls.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Objects/ControlSchemes/XboxControls.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Objects/ControlSchemes/SquareControls.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Objects/ControllerSelector.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Objects/ControlSchemes/KiteControls.tscn" type="PackedScene" id=13]
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+uniform float max_line_width = 10.0;
+uniform float min_line_width = 5.0;
+uniform float freq = 1.0;
+uniform float block_size = 20.0;
+uniform vec4 outline_colour = vec4(0,0,0,1);
+
+const float pi = 3.1415;
+const int ang_res = 16;
+
+
+float hash(vec2 p, float s) {
+	return fract(35.1 * sin(dot(vec3(112.3, 459.2, 753.2), vec3(p, s))));
+}
+
+float noise(vec2 p, float s) {
+	vec2 d = vec2(0, 1);
+	vec2 b = floor(p);
+	vec2 f = fract(p);
+	return mix(
+		mix(hash(b + d.xx, s), hash(b + d.yx, s), f.x),
+		mix(hash(b + d.xy, s), hash(b + d.yy, s), f.x), f.y);
+}
+
+float get_line_width(vec2 p, float s) {
+	p /= block_size;
+	float w = 0.0;
+	float intensity = 1.0;
+	for (int i = 0; i < 3; i++) {
+		w = mix(w, noise(p, s), intensity);
+		p /= 2.0;
+		intensity /= 2.0;
+	}
+	
+	return mix(max_line_width, min_line_width, w);
+}
+
+void fragment() {
+
+	float alpha = 0.0;
+	float timeStep = floor(TIME * freq);
+	vec2 scale = TEXTURE_PIXEL_SIZE;
+	scale *= get_line_width(UV / TEXTURE_PIXEL_SIZE, timeStep);
+	for (int i = 0; i < ang_res; i++) {
+		float angle = 2.0 * pi * float(i) / float(ang_res);
+		vec2 disp = scale * vec2(cos(angle), sin(angle));
+		alpha += texture(TEXTURE, UV + disp).a;
+	}
+	
+	if ((alpha > 0.0) && (texture(TEXTURE, UV).a < 0.1)) {
+		COLOR = outline_colour;
+	}
+	else {
+		COLOR = texture(TEXTURE, UV);
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/max_line_width = 10.0
+shader_param/min_line_width = 5.0
+shader_param/freq = 1.0
+shader_param/block_size = 20.0
+shader_param/outline_colour = Plane( 0, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=1]
+size = 60
+outline_color = Color( 0.6, 0.6, 0.6, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=2]
+resource_name = "FadeInUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Instructions:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 0.75, 0.75, 0.75, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("UIBox:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 0.75, 0.75, 0.75, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CoolDownUpgrade:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HPButton:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "FadeOutUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Instructions:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("UIBox:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CoolDownUpgrade:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HPButton:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Instructions:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("UIBox:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CoolDownUpgrade:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HPButton:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="ShapeBuilder" type="Node2D"]
+material = SubResource( 6 )
+script = ExtResource( 4 )
+
+[node name="ControlSchemes" type="Node2D" parent="."]
+position = Vector2( 2, -47 )
+
+[node name="TriangleControls" parent="ControlSchemes" instance=ExtResource( 9 )]
+controlType = "Triangle"
+
+[node name="SquareControls" parent="ControlSchemes" instance=ExtResource( 11 )]
+modulate = Color( 1, 1, 1, 0 )
+
+[node name="KiteControls" parent="ControlSchemes" instance=ExtResource( 13 )]
+
+[node name="JoystickControls" parent="ControlSchemes" instance=ExtResource( 10 )]
+modulate = Color( 1, 1, 1, 0 )
+controlType = "Xbox"
+
+[node name="UIBox" parent="." groups=["Upgrade_Button"] instance=ExtResource( 3 )]
+position = Vector2( 6, 256 )
+square_starting_item_count = 0
+
+[node name="CoolDownUpgrade" parent="." groups=["Upgrade_Button"] instance=ExtResource( 6 )]
+visible = false
+position = Vector2( -203, 237 )
+script = ExtResource( 7 )
+
+[node name="HPButton" parent="." groups=["Upgrade_Button"] instance=ExtResource( 8 )]
+visible = false
+position = Vector2( 206, 259 )
+
+[node name="ControllorSelector" parent="." instance=ExtResource( 12 )]
+visible = false
+position = Vector2( -83, 179 )
+
+[node name="Instructions" type="RichTextLabel" parent="."]
+margin_left = -170.0
+margin_top = -326.0
+margin_right = 212.0
+margin_bottom = -209.0
+rect_pivot_offset = Vector2( 160, -44 )
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Pick a side to upgrade.
+"
+text = "Pick a side to upgrade.
+"
+scroll_active = false
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+modulate = Color( 1.25, 1.25, 1.25, 1 )
+position = Vector2( 2, -49 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FadeInUI = SubResource( 2 )
+anims/FadeOutUI = SubResource( 4 )
+anims/RESET = SubResource( 3 )
+
+[node name="blast_timer" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+
+[node name="blast_timer2" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_2"
+
+[node name="blast_timer3" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_3"
+
+[node name="blast_timer4" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_4"
+
+[node name="blast_timer5" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_5"
+
+[node name="blast_timer6" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_6"
+
+[node name="blast_timer7" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_7"
+
+[node name="blast_timer8" type="Timer" parent="."]
+wait_time = 0.7
+script = ExtResource( 5 )
+action = "fire_8"
+
+[connection signal="decrease_cooldown" from="." to="blast_timer" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer2" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer3" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer4" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer5" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer6" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer7" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="decrease_cooldown" from="." to="blast_timer8" method="_on_ShapeBuilder_decrease_cooldown"]
+[connection signal="enable_upgrade_buttons" from="." to="UIBox" method="_on_ShapeBuilder_enable_upgrade_buttons"]
+[connection signal="enable_upgrade_buttons" from="." to="CoolDownUpgrade" method="_on_ShapeBuilder_enable_upgrade_buttons"]
+[connection signal="enable_upgrade_buttons" from="." to="HPButton" method="_on_ShapeBuilder_enable_upgrade_buttons"]
+[connection signal="enable_upgrade_buttons" from="." to="ControllorSelector" method="_on_ShapeBuilder_enable_upgrade_buttons"]
+[connection signal="player_finished_building" from="." to="ControllorSelector" method="_on_ShapeBuilder_player_finished_building"]
+[connection signal="player_started_building" from="." to="ControlSchemes/TriangleControls" method="_on_ShapeBuilder_player_started_building"]
+[connection signal="player_started_building" from="." to="ControlSchemes/SquareControls" method="_on_ShapeBuilder_player_started_building"]
+[connection signal="player_started_building" from="." to="ControlSchemes/KiteControls" method="_on_ShapeBuilder_player_started_building"]
+[connection signal="player_started_building" from="." to="ControlSchemes/JoystickControls" method="_on_ShapeBuilder_player_started_building"]
+[connection signal="ready_for_zoomout" from="." to="ControlSchemes/TriangleControls" method="_on_ShapeBuilder_ready_for_zoomout"]
+[connection signal="ready_for_zoomout" from="." to="ControlSchemes/SquareControls" method="_on_ShapeBuilder_ready_for_zoomout"]
+[connection signal="ready_for_zoomout" from="." to="ControlSchemes/KiteControls" method="_on_ShapeBuilder_ready_for_zoomout"]
+[connection signal="ready_for_zoomout" from="." to="ControlSchemes/JoystickControls" method="_on_ShapeBuilder_ready_for_zoomout"]
+[connection signal="clicked" from="UIBox" to="." method="_on_UIBox_clicked"]
+[connection signal="clicked" from="CoolDownUpgrade" to="." method="_on_CoolDownUpgrade_clicked"]
+[connection signal="clicked" from="HPButton" to="." method="_on_HPButton_clicked"]
+[connection signal="move" from="ControllorSelector" to="." method="_on_ControllorSelector_move"]
+[connection signal="crash" from="Player" to="." method="_on_Player_crash"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_AnimationPlayer_animation_finished"]
+[connection signal="min_cooldown_reached" from="blast_timer" to="." method="_on_blast_timer_min_cooldown_reached"]
+[connection signal="timeout" from="blast_timer" to="blast_timer" method="_on_blast_timer_timeout"]
+[connection signal="timeout" from="blast_timer2" to="blast_timer2" method="_on_blast_timer2_timeout"]
+[connection signal="timeout" from="blast_timer3" to="blast_timer3" method="_on_blast_timer3_timeout"]
+[connection signal="timeout" from="blast_timer4" to="blast_timer4" method="_on_blast_timer4_timeout"]
+[connection signal="timeout" from="blast_timer5" to="blast_timer5" method="_on_blast_timer5_timeout"]
+[connection signal="timeout" from="blast_timer6" to="blast_timer6" method="_on_blast_timer6_timeout"]
+[connection signal="timeout" from="blast_timer7" to="blast_timer7" method="_on_blast_timer7_timeout"]
+[connection signal="timeout" from="blast_timer8" to="blast_timer8" method="_on_blast_timer8_timeout"]

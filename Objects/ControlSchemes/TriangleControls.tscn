@@ -1,0 +1,217 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://fonts/Fibberish/Fibberish.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Objects/KeyConfig.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/KeyConfigManager.gd" type="Script" id=3]
+[ext_resource path="res://Objects/ControlSchemes/ControlAnimPlayer.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 60
+outline_color = Color( 0.6, 0.6, 0.6, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "FadeInUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("..:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "FadeOutUI"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("..:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("..:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="TriangleControls" type="Node2D"]
+modulate = Color( 1, 1, 1, 0 )
+script = ExtResource( 4 )
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+margin_left = 134.0
+margin_top = -7.0
+margin_right = 278.0
+margin_bottom = 29.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Shoot left"
+text = "Shoot left"
+scroll_active = false
+
+[node name="RichTextLabel3" type="RichTextLabel" parent="."]
+margin_left = 239.0
+margin_top = 104.0
+margin_right = 394.0
+margin_bottom = 142.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Shoot down"
+text = "Shoot down"
+scroll_active = false
+
+[node name="RichTextLabel4" type="RichTextLabel" parent="."]
+margin_left = 359.0
+margin_right = 538.0
+margin_bottom = 45.0
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Shoot right"
+text = "Shoot right"
+scroll_active = false
+
+[node name="RichTextLabel5" type="RichTextLabel" parent="."]
+margin_left = -394.0
+margin_top = -65.0
+margin_right = -263.0
+margin_bottom = -34.0
+rect_pivot_offset = Vector2( 40, 16 )
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Move Up"
+text = "Move Up"
+scroll_active = false
+
+[node name="RichTextLabel6" type="RichTextLabel" parent="."]
+margin_left = -521.0
+margin_top = 20.0
+margin_right = -370.0
+margin_bottom = 47.0
+rect_pivot_offset = Vector2( 41, 10 )
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Move Left"
+text = "Move Left"
+scroll_active = false
+
+[node name="RichTextLabel7" type="RichTextLabel" parent="."]
+margin_left = -323.0
+margin_top = 24.0
+margin_right = -163.0
+margin_bottom = 58.0
+rect_pivot_offset = Vector2( 71, 15 )
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Move Right
+"
+text = "Move Right
+"
+scroll_active = false
+
+[node name="RichTextLabel8" type="RichTextLabel" parent="."]
+margin_left = -419.0
+margin_top = 127.0
+margin_right = -269.0
+margin_bottom = 156.0
+rect_pivot_offset = Vector2( 39, 12 )
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Move Down"
+text = "Move Down"
+scroll_active = false
+
+[node name="KeyBinds" type="RichTextLabel" parent="."]
+margin_left = 152.0
+margin_top = -211.0
+margin_right = 534.0
+margin_bottom = -94.0
+rect_pivot_offset = Vector2( 160, -44 )
+mouse_filter = 2
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "Click any key to change it.
+"
+text = "Click any key to change it.
+"
+scroll_active = false
+
+[node name="KeyManager" type="Node2D" parent="."]
+position = Vector2( -3, 1 )
+script = ExtResource( 3 )
+
+[node name="KeyConfig" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( -384, -130 )
+action = "move_up"
+
+[node name="KeyConfig2" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( -270, -33 )
+action = "move_right"
+
+[node name="KeyConfig3" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( -384, 80 )
+action = "move_down"
+
+[node name="KeyConfig4" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( -494, -33 )
+action = "move_left"
+
+[node name="KeyConfig5" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( 165, -65 )
+z_index = 1
+action = "fire_2"
+
+[node name="KeyConfig6" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( 284, 51 )
+action = "fire_3"
+
+[node name="KeyConfig7" parent="KeyManager" instance=ExtResource( 2 )]
+position = Vector2( 420, -61 )
+action = "fire_4"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../KeyManager")
+anims/FadeInUI = SubResource( 3 )
+anims/FadeOutUI = SubResource( 4 )
+anims/RESET = SubResource( 5 )
+
+[connection signal="binding_changed" from="KeyManager/KeyConfig" to="KeyManager" method="_on_KeyConfig_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig" to="KeyManager" method="_on_KeyConfig_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig2" to="KeyManager" method="_on_KeyConfig2_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig2" to="KeyManager" method="_on_KeyConfig2_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig3" to="KeyManager" method="_on_KeyConfig3_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig3" to="KeyManager" method="_on_KeyConfig3_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig4" to="KeyManager" method="_on_KeyConfig4_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig4" to="KeyManager" method="_on_KeyConfig4_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig5" to="KeyManager" method="_on_KeyConfig5_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig5" to="KeyManager" method="_on_KeyConfig5_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig6" to="KeyManager" method="_on_KeyConfig6_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig6" to="KeyManager" method="_on_KeyConfig6_pressed"]
+[connection signal="binding_changed" from="KeyManager/KeyConfig7" to="KeyManager" method="_on_KeyConfig7_binding_changed"]
+[connection signal="pressed" from="KeyManager/KeyConfig7" to="KeyManager" method="_on_KeyConfig7_pressed"]
